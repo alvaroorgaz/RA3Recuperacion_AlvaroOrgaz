@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Panel Coordinador</title>
+    <script src="/js/coordinador.js" defer></script>
+</head>
+<body>
+
+<h1>Panel del Coordinador</h1>
+
+<!-- LOGOUT -->
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesión</button>
+</form>
+
+<hr>
+
+<h2>Camiones</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Matrícula</th>
+        <th>Nº Rutas</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${camiones}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.matricula}"></td>
+        <td th:text="${#lists.size(c.asignaciones)}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Rutas</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Nº Camiones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${rutas}">
+        <td th:text="${r.id}"></td>
+        <td th:text="${r.nombre}"></td>
+        <td th:text="${#lists.size(r.asignaciones)}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Asignaciones</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Camión</th>
+        <th>Ruta</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${asignaciones}">
+        <td th:text="${a.camion.matricula}"></td>
+        <td th:text="${a.ruta.nombre}"></td>
+        <td>
+            <form th:action="@{/coordinador/asignacion/eliminar/{id}(id=${a.id})}"
+                  method="post">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Nueva asignación</h2>
+<form th:action="@{/coordinador/asignacion/crear}" method="post">
+
+    <label>Camión:</label>
+    <select name="camionId" required>
+        <option th:each="c : ${camiones}"
+                th:value="${c.id}"
+                th:text="${c.matricula}">
+        </option>
+    </select>
+
+    <label>Ruta:</label>
+    <select name="rutaId" required>
+        <option th:each="r : ${rutas}"
+                th:value="${r.id}"
+                th:text="${r.nombre}">
+        </option>
+    </select>
+
+    <button type="submit">Asignar</button>
+</form>
+
+</body>
+</html>
